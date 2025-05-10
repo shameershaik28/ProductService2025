@@ -4,9 +4,8 @@ import com.example.ProductService.dto.FakeStoreProductDTO;
 import com.example.ProductService.service.ProductService;
 import lombok.experimental.PackagePrivate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ProductController {
@@ -25,5 +24,18 @@ public class ProductController {
     {
         return productService.getProductById(id);
     }
+
+    @PostMapping("/products")
+    public FakeStoreProductDTO createProduct(@RequestBody FakeStoreProductDTO product)
+    {
+        return productService.createProduct(product);
+    }
+
+    @PutMapping("/products/{id}")
+    public FakeStoreProductDTO updateProduct(@PathVariable("id") int id, @RequestBody FakeStoreProductDTO product)
+    {
+        return productService.updateProduct(id, product);
+    }
+
 
 }
