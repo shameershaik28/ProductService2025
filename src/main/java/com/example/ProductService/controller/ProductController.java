@@ -4,6 +4,7 @@ import com.example.ProductService.dto.FakeStoreProductDTO;
 import com.example.ProductService.service.ProductService;
 import lombok.experimental.PackagePrivate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,9 +21,15 @@ public class ProductController {
     }
 
     @GetMapping("/products/{id}")
-    public FakeStoreProductDTO getProductById(@PathVariable("id") int id)
+    public ResponseEntity<FakeStoreProductDTO> getProductById(@PathVariable("id") int id)
     {
-        return productService.getProductById(id);
+        if(id<=0)
+        {
+            throw  new IllegalArgumentException("Product does not exist");
+            //return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        FakeStoreProductDTO response = productService.getProductById(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/products")
@@ -35,6 +42,11 @@ public class ProductController {
     public FakeStoreProductDTO updateProduct(@PathVariable("id") int id, @RequestBody FakeStoreProductDTO product)
     {
         return productService.updateProduct(id, product);
+    }
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleException(Exception ex)
+    {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
 
