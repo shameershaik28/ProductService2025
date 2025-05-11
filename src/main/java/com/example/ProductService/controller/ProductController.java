@@ -1,6 +1,7 @@
 package com.example.ProductService.controller;
 
 import com.example.ProductService.dto.FakeStoreProductDTO;
+import com.example.ProductService.model.Product;
 import com.example.ProductService.service.ProductService;
 import lombok.experimental.PackagePrivate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,20 +9,51 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class ProductController {
 
     @Autowired
     private ProductService productService;
 
+    @PostMapping("/products")
+    public ResponseEntity<Product> createProduct(@RequestBody Product product)
+    {
+        Product savedProduct = productService.saveProduct(product);
+        return ResponseEntity.ok(savedProduct);
+    }
+
     @GetMapping("/products")
-    public FakeStoreProductDTO[] getAllProducts()
+    public ResponseEntity<List<Product>> getAllProduct()
+    {
+      List<Product> products = productService.getAllProducts();
+      return ResponseEntity.ok(products);
+    }
+
+
+    @GetMapping("/products/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable("id") int id)
+    {
+        Product savedProduct = productService.getProduct(id);
+        return ResponseEntity.ok(savedProduct);
+    }
+
+    @DeleteMapping("/products/{id}")
+    public ResponseEntity<Boolean> deleteProductById(@PathVariable("id") int id)
+    {
+        boolean response = productService.deleteProduct(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/products/fake")
+    public FakeStoreProductDTO[] getAllProductsFromFakeStore()
     {
         return productService.getAllProductsFromFakeStore();
     }
 
-    @GetMapping("/products/{id}")
-    public ResponseEntity<FakeStoreProductDTO> getProductById(@PathVariable("id") int id)
+    @GetMapping("/products/{id}/fake")
+    public ResponseEntity<FakeStoreProductDTO> getProductByIdFromFakeStore(@PathVariable("id") int id)
     {
         if(id<=0)
         {
@@ -32,14 +64,14 @@ public class ProductController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("/products")
-    public FakeStoreProductDTO createProduct(@RequestBody FakeStoreProductDTO product)
+    @PostMapping("/products/fake")
+    public FakeStoreProductDTO createProductFromFakeStore(@RequestBody FakeStoreProductDTO product)
     {
         return productService.createProduct(product);
     }
 
-    @PutMapping("/products/{id}")
-    public FakeStoreProductDTO updateProduct(@PathVariable("id") int id, @RequestBody FakeStoreProductDTO product)
+    @PutMapping("/products/{id}/fake")
+    public FakeStoreProductDTO updateProductFromFakeStore(@PathVariable("id") int id, @RequestBody FakeStoreProductDTO product)
     {
         return productService.updateProduct(id, product);
     }
