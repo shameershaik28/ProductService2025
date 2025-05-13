@@ -41,16 +41,25 @@ public class ProductService {
         }
 
     }
+
+
+    public List<Product> getProductByDescription(String description){
+//        List<Product> products = productRepository.findAll();
+//        List<Product> matchedProducts = new ArrayList<>();
+//        for(Product product : products){
+//            if(product.getDescription().equals(description)){
+//                matchedProducts.add(product);
+//            }
+//        }
+//        return matchedProducts;
+        List<Product> matchedProducts = productRepository.findAllByDescriptionIgnoreCase(description);
+        return matchedProducts;
+    }
+
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
-    public Product updateProduct(Product newProduct, int productId) {
-        Product savedProduct = getProduct(productId);
-        newProduct.setId(productId);
-        Product updatedProduct = productRepository.save(newProduct);
-        return updatedProduct;
-    }
 
     public FakeStoreProductDTO[] getAllProductsFromFakeStore() {
         return fakeStoreClient.getAllProducts();

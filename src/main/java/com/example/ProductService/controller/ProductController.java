@@ -39,6 +39,12 @@ public class ProductController {
         return ResponseEntity.ok(savedProduct);
     }
 
+    @GetMapping("/products/desc/{description}") // localhost:8080/product/desc/something
+    public ResponseEntity<List<Product>> getProductByDescription(@PathVariable("description") String description){
+        List<Product> matchedProducts = productService.getProductByDescription(description);
+        return ResponseEntity.ok(matchedProducts);
+    }
+
     @DeleteMapping("/products/{id}")
     public ResponseEntity<Boolean> deleteProductById(@PathVariable("id") int id)
     {
