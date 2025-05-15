@@ -1,6 +1,7 @@
 package com.example.ProductService.controller;
 
 import com.example.ProductService.dto.FakeStoreProductDTO;
+import com.example.ProductService.dto.ProductProjection;
 import com.example.ProductService.model.Product;
 import com.example.ProductService.service.ProductService;
 import lombok.experimental.PackagePrivate;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+//@RequestMapping("/v1/product")
 public class ProductController {
 
     @Autowired
@@ -50,6 +52,12 @@ public class ProductController {
     {
         boolean response = productService.deleteProduct(id);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/products/projection/{name}") // localhost:8080/product/desc/something
+    public ResponseEntity<ProductProjection> getProductProjectionByName(@PathVariable("name") String name){
+        ProductProjection projection = productService.getProductProjection(name);
+        return ResponseEntity.ok(projection);
     }
 
     @GetMapping("/products/fake")

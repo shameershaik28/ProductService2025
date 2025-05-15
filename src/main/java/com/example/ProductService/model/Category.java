@@ -1,6 +1,7 @@
 package com.example.ProductService.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
@@ -12,9 +13,9 @@ import java.util.List;
 @Setter
 @Entity
 public class Category extends BaseModel{
-//    @OneToMany
-//    @JoinColumn (name = "category_id")
-//    private List<Product> products;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn (name = "category_id")
+    private List<Product> products;
 
 
 }

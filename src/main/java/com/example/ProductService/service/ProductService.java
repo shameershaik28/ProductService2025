@@ -3,6 +3,7 @@ package com.example.ProductService.service;
 import com.example.ProductService.Repository.ProductRepository;
 import com.example.ProductService.client.FakeStoreClient;
 import com.example.ProductService.dto.FakeStoreProductDTO;
+import com.example.ProductService.dto.ProductProjection;
 import com.example.ProductService.exception.ProductNotFoundException;
 import com.example.ProductService.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class ProductService {
         Optional<Product> productOptional = productRepository.findById(productId);
         if(productOptional.isEmpty())
         {
-             throw new ProductNotFoundException("Product with id"+ productId + "not found");
+             throw new ProductNotFoundException("Product with id "+ productId + " not found");
         }
         else
         {
@@ -58,6 +59,10 @@ public class ProductService {
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+
+    public ProductProjection getProductProjection(String productName){
+        return productRepository.findFirstByName(productName);
     }
 
 
