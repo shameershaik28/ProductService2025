@@ -18,14 +18,20 @@ public class ProductService {
     private FakeStoreClient fakeStoreClient;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private CategoryService categoryService;
 
 
+    public List<Product> getAllProductByCategoryId(int categoryId){
+        List<Product> products = categoryService.getAllProductsByCategory(categoryId);
+        return products;
+    }
     public Product saveProduct(Product product) {
         Product savedProduct = productRepository.save(product);
         return savedProduct;
     }
 
-    public Boolean deleteProduct(int productId) {
+    public boolean deleteProduct(int productId) {
          productRepository.deleteById(productId);
          return true;
     }
@@ -55,6 +61,13 @@ public class ProductService {
 //        return matchedProducts;
         List<Product> matchedProducts = productRepository.findAllByDescriptionIgnoreCase(description);
         return matchedProducts;
+    }
+
+    public Product updateProduct(Product newProduct, int productId){
+        Product savedProduct = getProduct(productId);
+        newProduct.setId(productId);
+        Product updatedProduct = productRepository.save(newProduct);
+        return updatedProduct;
     }
 
     public List<Product> getAllProducts() {

@@ -7,7 +7,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ProductDescDTO {
+public class ProductResponseDTO {
     private String productName;
-    private String productDesc;
+    private String productDescription;
+    private double productPrice;
+    private double rating;
+
+
 }

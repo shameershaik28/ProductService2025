@@ -2,22 +2,43 @@ package com.example.ProductService.controller;
 
 import com.example.ProductService.dto.FakeStoreProductDTO;
 import com.example.ProductService.dto.ProductProjection;
+import com.example.ProductService.dto.ProductResponseDTO;
 import com.example.ProductService.model.Product;
 import com.example.ProductService.service.ProductService;
-import lombok.experimental.PackagePrivate;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 @RestController
 //@RequestMapping("/v1/product")
 public class ProductController {
 
-    @Autowired
-    private ProductService productService;
+   @Autowired
+  private ProductService productService;
+
+    @GetMapping("/products/category/{id}")
+    public ResponseEntity<List<ProductResponseDTO>> getAllProductsByCategory(@PathVariable("id") int categoryId) {
+        List<Product> savedProducts = productService.getAllProductByCategoryId(categoryId);
+        List<ProductResponseDTO> productResponseDTOS = new ArrayList<>();
+        for (Product product : savedProducts) {
+            ProductResponseDTO responseDTO = new ProductResponseDTO(
+                    product.getName(),
+                    product.getDescription(),
+                    product.getPrice(),
+                    product.getRating()
+            );
+            productResponseDTOS.add(responseDTO);
+        }
+        return ResponseEntity.ok(productResponseDTOS);
+    }
 
     @PostMapping("/products")
     public ResponseEntity<Product> createProduct(@RequestBody Product product)
