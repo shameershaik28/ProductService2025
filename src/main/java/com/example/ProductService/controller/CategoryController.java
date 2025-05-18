@@ -2,9 +2,10 @@ package com.example.ProductService.controller;
 
 import com.example.ProductService.dto.CategoryRequestDTO;
 import com.example.ProductService.dto.CategoryResponseDTO;
+import com.example.ProductService.dto.ProductResponseDTO;
 import com.example.ProductService.model.Category;
+import com.example.ProductService.model.Product;
 import com.example.ProductService.service.CategoryService;
-import com.example.ProductService.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,13 +47,24 @@ public class CategoryController {
         return ResponseEntity.ok(categoryResponseDTOS);
     }
 
-    @GetMapping("/category/product/{id}")
-    public ResponseEntity<CategoryResponseDTO> getCategoryFromProduct(@PathVariable("id") int productId){
-        Category category = categoryService.getCategoryFromProduct(productId);
-        CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO(
-                category.getName(), category.getDescription()
-        );
-        return ResponseEntity.ok(categoryResponseDTO);
+    @DeleteMapping("/category/{id}")
+    public ResponseEntity<Boolean> deleteCategory(@PathVariable("id") int id){
+        return ResponseEntity.ok(categoryService.deleteCategory(id));
+    }
+    @GetMapping("/products/category/{id}")
+    public ResponseEntity<List<ProductResponseDTO>> getAllProductsByCategory(@PathVariable("id") int categoryId) {
+        List<Product> savedProducts = categoryService.getAllProductsByCategory(categoryId);
+        List<ProductResponseDTO> productResponseDTOS = new ArrayList<>();
+        for (Product product : savedProducts) {
+            ProductResponseDTO responseDTO = new ProductResponseDTO(
+                    product.getName(),
+                    product.getDescription(),
+                    product.getPrice(),
+                    product.getRating()
+            );
+            productResponseDTOS.add(responseDTO);
+        }
+        return ResponseEntity.ok(productResponseDTOS);
     }
 
 }

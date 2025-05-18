@@ -17,7 +17,6 @@ import java.util.Optional;
 public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
-
     @Autowired
     private ProductService productService;
 
@@ -48,13 +47,16 @@ public class CategoryService {
         List<Product> products = savedCategory.getProducts();
         return products;
     }
-    public Category getCategoryFromProduct(int productId){
-        Product product = productService.getProduct(productId);
-        Category category = categoryRepository.findByProductsIn(List.of(product)).orElseThrow(
-                () -> new CategoryNotFoundException("Category Not found")
-        );
-        return category;
+
+    public boolean deleteCategory(int categoryId){
+        Category category = getCategory(categoryId);
+        for(Product product : category.getProducts()){
+            productService.deleteProduct(product.getId());
+        }
+        categoryRepository.deleteById(categoryId);
+        return true;
     }
+
 
 
 }

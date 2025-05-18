@@ -1,10 +1,14 @@
 package com.example.ProductService.service;
 
+import com.example.ProductService.Repository.CategoryRepository;
 import com.example.ProductService.Repository.ProductRepository;
 import com.example.ProductService.client.FakeStoreClient;
 import com.example.ProductService.dto.FakeStoreProductDTO;
 import com.example.ProductService.dto.ProductProjection;
+import com.example.ProductService.dto.ProductReqDTO;
+import com.example.ProductService.exception.CategoryNotFoundException;
 import com.example.ProductService.exception.ProductNotFoundException;
+import com.example.ProductService.model.Category;
 import com.example.ProductService.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,17 +23,31 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
-    private CategoryService categoryService;
+    private CategoryRepository categoryRepository;
 
 
-    public List<Product> getAllProductByCategoryId(int categoryId){
-        List<Product> products = categoryService.getAllProductsByCategory(categoryId);
-        return products;
-    }
-    public Product saveProduct(Product product) {
-        Product savedProduct = productRepository.save(product);
-        return savedProduct;
-    }
+//    public List<Product> getAllProductByCategoryId(int categoryId){
+//        List<Product> products = categoryService.getAllProductsByCategory(categoryId);
+//        return products;
+//    }
+public Product saveProduct(ProductReqDTO productReqDTO) {
+    Category savedCategory = categoryRepository.findById(productReqDTO.getCategoryId()).orElseThrow(
+            () -> new CategoryNotFoundException("Category does not exist")
+    );
+
+    Product product = new Product();
+    product.setName(productReqDTO.getName());
+    product.setDescription(productReqDTO.getDescription());
+    product.setPrice(productReqDTO.getPrice());
+    product.setQuantity(productReqDTO.getQuantity());
+    product.setRating(productReqDTO.getRating());
+    Product savedProduct = productRepository.save(product);
+
+    savedCategory.getProducts().add(savedProduct);
+    categoryRepository.save(savedCategory);
+
+    return savedProduct;
+}
 
     public boolean deleteProduct(int productId) {
          productRepository.deleteById(productId);

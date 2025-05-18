@@ -2,6 +2,7 @@ package com.example.ProductService.controller;
 
 import com.example.ProductService.dto.FakeStoreProductDTO;
 import com.example.ProductService.dto.ProductProjection;
+import com.example.ProductService.dto.ProductReqDTO;
 import com.example.ProductService.dto.ProductResponseDTO;
 import com.example.ProductService.model.Product;
 import com.example.ProductService.service.ProductService;
@@ -24,26 +25,9 @@ public class ProductController {
    @Autowired
   private ProductService productService;
 
-    @GetMapping("/products/category/{id}")
-    public ResponseEntity<List<ProductResponseDTO>> getAllProductsByCategory(@PathVariable("id") int categoryId) {
-        List<Product> savedProducts = productService.getAllProductByCategoryId(categoryId);
-        List<ProductResponseDTO> productResponseDTOS = new ArrayList<>();
-        for (Product product : savedProducts) {
-            ProductResponseDTO responseDTO = new ProductResponseDTO(
-                    product.getName(),
-                    product.getDescription(),
-                    product.getPrice(),
-                    product.getRating()
-            );
-            productResponseDTOS.add(responseDTO);
-        }
-        return ResponseEntity.ok(productResponseDTOS);
-    }
-
     @PostMapping("/products")
-    public ResponseEntity<Product> createProduct(@RequestBody Product product)
-    {
-        Product savedProduct = productService.saveProduct(product);
+    public ResponseEntity<Product> createProduct(@RequestBody ProductReqDTO productReqDTO){
+        Product savedProduct = productService.saveProduct(productReqDTO);
         return ResponseEntity.ok(savedProduct);
     }
 
