@@ -1,20 +1,17 @@
 package com.example.ProductService.controller;
 
-import com.example.ProductService.dto.FakeStoreProductDTO;
-import com.example.ProductService.dto.ProductProjection;
-import com.example.ProductService.dto.ProductReqDTO;
-import com.example.ProductService.dto.ProductResponseDTO;
+import com.example.ProductService.dto.*;
 import com.example.ProductService.model.Product;
 import com.example.ProductService.service.ProductService;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
+
 
 @Getter
 @Setter
@@ -31,11 +28,38 @@ public class ProductController {
         return ResponseEntity.ok(savedProduct);
     }
 
-    @GetMapping("/products")
-    public ResponseEntity<List<Product>> getAllProduct()
-    {
-      List<Product> products = productService.getAllProducts();
-      return ResponseEntity.ok(products);
+    @GetMapping("/all/product/{pageNumber}/{ascFilter}/{descFilter}")
+    public ResponseEntity<Page<Product>> getAllProducts(@PathVariable("pageNumber") int pageNumber,
+                                                        @PathVariable("ascFilter") String ascFilter,
+                                                        @PathVariable("descFilter") String descFilter ){
+        Page<Product> products = productService.getAllProductsPaginated(pageNumber, ascFilter, descFilter);
+        return ResponseEntity.ok(products);
+    }
+
+    @PostMapping("/all/products/{pageNumber}")
+    public ResponseEntity<Page<Product>> getAllProducts(
+            @PathVariable int pageNumber,
+            @RequestBody List<SortDTO> sortDTOs) {
+        return ResponseEntity.ok(productService.getAllProductsPaginated(pageNumber, sortDTOs));
+    }
+
+    // Controller method to get paginated and sorted products
+// Supports sorting in ascending or descending order via query parameters
+    @GetMapping("/all/products/{pageNumber}")
+    public ResponseEntity<Page<Product>> getAllProducts(
+            @PathVariable("pageNumber") int pageNumber,
+            @RequestParam(required = false) List<String> asc,
+            @RequestParam(required = false) List<String> desc) {
+
+        Page<Product> products = productService.getAllProductsPaginated(pageNumber, asc, desc);
+        return ResponseEntity.ok(products);
+    }
+
+
+    @GetMapping("/all/product")
+    public ResponseEntity<List<Product>> getAllProducts(){
+        List<Product> products = productService.getAllProducts();
+        return ResponseEntity.ok(products);
     }
 
 

@@ -6,11 +6,15 @@ import com.example.ProductService.client.FakeStoreClient;
 import com.example.ProductService.dto.FakeStoreProductDTO;
 import com.example.ProductService.dto.ProductProjection;
 import com.example.ProductService.dto.ProductReqDTO;
+import com.example.ProductService.dto.SortDTO;
 import com.example.ProductService.exception.CategoryNotFoundException;
 import com.example.ProductService.exception.ProductNotFoundException;
 import com.example.ProductService.model.Category;
 import com.example.ProductService.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -87,6 +91,41 @@ public Product saveProduct(ProductReqDTO productReqDTO) {
         Product updatedProduct = productRepository.save(newProduct);
         return updatedProduct;
     }
+    public Page<Product> getAllProductsPaginated(int pageNumber, String filterAsc, String filterDesc){
+        // Sort sort = Sort.by(parameter).ascen().and( Sort....).and(Sort....)
+        Sort sort = Sort.by(filterAsc).ascending().and(Sort.by(filterDesc).descending());
+        return productRepository.findAll(PageRequest.of(pageNumber, 3, sort));
+    }
+
+    public Page<Product> getAllProductsPaginated(int pageNumber, List<SortDTO> sortingDTO){
+        Sort sort = Sort.by("price").ascending().and(Sort.by("rating").descending());
+        //TODO : add the logic to sort based on the items inside sortingDTO
+        return productRepository.findAll(PageRequest.of(pageNumber, 3, sort));
+    }
+
+    public Page<Product> getAllProductsPaginated(int pageNumber, List<String> asc, List<String> desc) {
+        Sort sort = Sort.unsorted();
+
+        if (asc != null) {
+            for (String field : asc) {
+                sort = sort.and(Sort.by(field).ascending());
+            }
+        }
+
+        if (desc != null) {
+            for (String field : desc) {
+                sort = sort.and(Sort.by(field).descending());
+            }
+        }
+
+        // Default sort if both asc and desc are empty
+        if (sort.isUnsorted()) {
+            sort = Sort.by("price").ascending().and(Sort.by("rating").descending());
+        }
+
+        return productRepository.findAll(PageRequest.of(pageNumber, 3, sort));
+    }
+
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
