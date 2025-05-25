@@ -97,11 +97,23 @@ public Product saveProduct(ProductReqDTO productReqDTO) {
         return productRepository.findAll(PageRequest.of(pageNumber, 3, sort));
     }
 
-    public Page<Product> getAllProductsPaginated(int pageNumber, List<SortDTO> sortingDTO){
-        Sort sort = Sort.by("price").ascending().and(Sort.by("rating").descending());
-        //TODO : add the logic to sort based on the items inside sortingDTO
+    public Page<Product> getAllProductsPaginated(int pageNumber, List<SortDTO> sortingDTOs) {
+        Sort sort = Sort.unsorted();
+        for (SortDTO dto : sortingDTOs) {
+            if (dto.isFilterType()) {
+                sort = sort.and(Sort.by(dto.getFilterName()).ascending());
+            } else {
+                sort = sort.and(Sort.by(dto.getFilterName()).descending());
+            }
+        }
+
+        if (sort.isUnsorted()) {
+            sort = Sort.by("price").ascending().and(Sort.by("rating").descending());
+        }
+
         return productRepository.findAll(PageRequest.of(pageNumber, 3, sort));
     }
+
 
     public Page<Product> getAllProductsPaginated(int pageNumber, List<String> asc, List<String> desc) {
         Sort sort = Sort.unsorted();
