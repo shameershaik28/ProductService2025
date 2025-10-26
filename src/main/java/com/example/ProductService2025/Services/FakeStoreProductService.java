@@ -6,7 +6,7 @@ import com.example.ProductService2025.exceptions.ProductNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-@Service
+@Service("fakestore")
 public class FakeStoreProductService implements ProductService{
 
     @Override
@@ -23,6 +23,11 @@ public class FakeStoreProductService implements ProductService{
             throw new ProductNotFoundException("Product with id: " + id +" was not found");
         }
         return convertFakeStoreProductToProduct(fakeStoreProductDto);
+    }
+
+    @Override
+    public Product createProduct(String name, String category, String description) {
+        return null;
     }
 
     private Product convertFakeStoreProductToProduct(FakeStoreProductDto dto){

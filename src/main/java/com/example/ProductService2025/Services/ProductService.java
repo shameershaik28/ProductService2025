@@ -5,4 +5,5 @@ import com.example.ProductService2025.exceptions.ProductNotFoundException;
 
 public interface ProductService {
     public Product getProductById(long id) throws ProductNotFoundException;
+    public Product createProduct(String name, String category, String description);
 }
