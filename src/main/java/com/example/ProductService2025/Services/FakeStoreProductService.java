@@ -7,12 +7,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service("fakestore")
 public class FakeStoreProductService implements ProductService{
 
     @Override
-    public Product getProductById(long id) throws ProductNotFoundException {
+    public Product getProductById(UUID id) throws ProductNotFoundException {
         /*
         Take the id from the input, and call this endpoint:a
         https://fakestoreapi.com/products/ + id
@@ -38,12 +39,12 @@ public class FakeStoreProductService implements ProductService{
     }
 
     @Override
-    public Product updateProduct(Long id, String name, String category, String description) throws ProductNotFoundException {
+    public Product updateProduct(UUID id, String name, String category, String description) throws ProductNotFoundException {
         return null;
     }
 
     @Override
-    public void deleteProduct(Long id) {
+    public void deleteProduct(UUID id) throws ProductNotFoundException {
 
     }
 

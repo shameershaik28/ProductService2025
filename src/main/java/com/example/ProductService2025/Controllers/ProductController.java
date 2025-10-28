@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/products")
@@ -21,7 +22,7 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable("id") long productId) throws ProductNotFoundException {
+    public ResponseEntity<Product> getProductById(@PathVariable("id") UUID productId) throws ProductNotFoundException {
 //        if(productId<1 || productId>20){
 //              return new ResponseEntity<>(HttpStatusCode.valueOf(400));
 //        }
@@ -45,7 +46,7 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(
-            @PathVariable Long id,
+            @PathVariable UUID id,
             @RequestBody CreateProductRequestDto dto) throws ProductNotFoundException {
 
         Product updated = productService.updateProduct(id, dto.getName(), dto.getCategory(), dto.getDescription());
@@ -53,7 +54,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Product> deleteProduct(@PathVariable Long id) throws ProductNotFoundException {
+    public ResponseEntity<Product> deleteProduct(@PathVariable UUID id) throws ProductNotFoundException {
         Product existing = productService.getProductById(id); // will throw if not found
         productService.deleteProduct(id);
         return ResponseEntity.ok(existing); // return the deleted entity

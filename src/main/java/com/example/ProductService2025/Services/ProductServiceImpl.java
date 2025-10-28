@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service("dbImpl")
 public class ProductServiceImpl implements ProductService{
@@ -14,7 +15,7 @@ public class ProductServiceImpl implements ProductService{
     ProductRepository productRepository;
 
     @Override
-    public Product getProductById(long id) throws ProductNotFoundException {
+    public Product getProductById(UUID id) throws ProductNotFoundException {
         return productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + id));
     }
@@ -41,7 +42,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public Product updateProduct(Long id, String name, String category, String description) throws ProductNotFoundException {
+    public Product updateProduct(UUID id, String name, String category, String description) throws ProductNotFoundException {
         Product existing = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + id));
 
@@ -54,7 +55,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public void deleteProduct(Long id) throws ProductNotFoundException {
+    public void deleteProduct(UUID id) throws ProductNotFoundException {
         Product existing = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + id));
         productRepository.delete(existing);
