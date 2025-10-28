@@ -6,6 +6,8 @@ import com.example.ProductService2025.exceptions.ProductNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 @Service("fakestore")
 public class FakeStoreProductService implements ProductService{
 
@@ -28,6 +30,21 @@ public class FakeStoreProductService implements ProductService{
     @Override
     public Product createProduct(String name, String category, String description) {
         return null;
+    }
+
+    @Override
+    public List<Product> getAllProducts() {
+        return List.of();
+    }
+
+    @Override
+    public Product updateProduct(Long id, String name, String category, String description) throws ProductNotFoundException {
+        return null;
+    }
+
+    @Override
+    public void deleteProduct(Long id) {
+
     }
 
     private Product convertFakeStoreProductToProduct(FakeStoreProductDto dto){

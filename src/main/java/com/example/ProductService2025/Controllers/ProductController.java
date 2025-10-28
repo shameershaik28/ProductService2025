@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/products")
 public class ProductController {
@@ -32,6 +34,28 @@ public class ProductController {
         System.out.println(requestDto);
         return productService.createProduct(requestDto.getName(), requestDto.getCategory(),
                 requestDto.getDescription());
+    }
 
+
+    @GetMapping
+    public ResponseEntity<List<Product>> getAllProducts() {
+        List<Product> products = productService.getAllProducts();
+        return ResponseEntity.ok(products);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Product> updateProduct(
+            @PathVariable Long id,
+            @RequestBody CreateProductRequestDto dto) throws ProductNotFoundException {
+
+        Product updated = productService.updateProduct(id, dto.getName(), dto.getCategory(), dto.getDescription());
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Product> deleteProduct(@PathVariable Long id) throws ProductNotFoundException {
+        Product existing = productService.getProductById(id); // will throw if not found
+        productService.deleteProduct(id);
+        return ResponseEntity.ok(existing); // return the deleted entity
     }
 }
