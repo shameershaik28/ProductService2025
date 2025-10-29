@@ -3,10 +3,13 @@ package com.example.ProductService2025.Services;
 import com.example.ProductService2025.Models.Product;
 import com.example.ProductService2025.dtos.FakeStoreProductDto;
 import com.example.ProductService2025.exceptions.ProductNotFoundException;
+import com.example.ProductService2025.projections.ProductInfo;
+import com.example.ProductService2025.projections.ProductNameOnly;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service("fakestore")
@@ -29,6 +32,11 @@ public class FakeStoreProductService implements ProductService{
     }
 
     @Override
+    public Optional<ProductInfo> getProductInfo(UUID id) {
+        return Optional.empty();
+    }
+
+    @Override
     public Product createProduct(String name, String category, String description) {
         return null;
     }
@@ -46,6 +54,11 @@ public class FakeStoreProductService implements ProductService{
     @Override
     public void deleteProduct(UUID id) throws ProductNotFoundException {
 
+    }
+
+    @Override
+    public Optional<ProductNameOnly> getProductName(UUID id) {
+        return Optional.empty();
     }
 
     private Product convertFakeStoreProductToProduct(FakeStoreProductDto dto){

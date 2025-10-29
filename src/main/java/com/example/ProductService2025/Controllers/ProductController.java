@@ -4,6 +4,8 @@ import com.example.ProductService2025.Models.Product;
 import com.example.ProductService2025.Services.ProductService;
 import com.example.ProductService2025.dtos.CreateProductRequestDto;
 import com.example.ProductService2025.exceptions.ProductNotFoundException;
+import com.example.ProductService2025.projections.ProductInfo;
+import com.example.ProductService2025.projections.ProductNameOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -23,11 +26,33 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable("id") UUID productId) throws ProductNotFoundException {
-//        if(productId<1 || productId>20){
-//              return new ResponseEntity<>(HttpStatusCode.valueOf(400));
-//        }
         Product product = productService.getProductById(productId);
-        return new ResponseEntity<>(product, HttpStatus.valueOf(200));
+        return ResponseEntity.ok(product);
+    }
+
+    @GetMapping("/{id}/info")
+    public ResponseEntity<?> getProductInfo(@PathVariable UUID id) {
+        Optional<ProductInfo> opt = productService.getProductInfo(id);
+
+        if (opt.isPresent()) {
+            ProductInfo info = opt.get();
+            return ResponseEntity.ok(info);
+        } else {
+            String msg = "Product not found with id: " + id;
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(msg);
+        }
+    }
+
+    @GetMapping("/{id}/name")
+    public ResponseEntity<?> getNameOnly(@PathVariable UUID id) {
+        Optional<ProductNameOnly> opt = productService.getProductName(id);
+
+        if (opt.isPresent()) {
+            return ResponseEntity.ok(opt.get());
+        } else {
+            String msg = "Product not found with id: " + id;
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(msg);
+        }
     }
 
     @PostMapping()

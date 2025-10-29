@@ -2,11 +2,14 @@ package com.example.ProductService2025.Services;
 
 import com.example.ProductService2025.Models.Product;
 import com.example.ProductService2025.exceptions.ProductNotFoundException;
+import com.example.ProductService2025.projections.ProductInfo;
+import com.example.ProductService2025.projections.ProductNameOnly;
 import com.example.ProductService2025.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service("dbImpl")
@@ -14,10 +17,30 @@ public class ProductServiceImpl implements ProductService{
     @Autowired
     ProductRepository productRepository;
 
-    @Override
+//    @Override
+//    public Product getProductById(UUID id) throws ProductNotFoundException {
+//        return productRepository.findById(id)
+//                .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + id));
+//    }
+
     public Product getProductById(UUID id) throws ProductNotFoundException {
-        return productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + id));
+        Optional<Product> product = productRepository.findById(id);
+        if(product.isPresent()){
+            return product.get();
+        }
+        else{
+            throw new ProductNotFoundException("Product with id:" + id + " is not found");
+        }
+    }
+
+    @Override
+    public Optional<ProductInfo> getProductInfo(UUID id) {
+        return productRepository.getProductInfo(id);
+    }
+
+
+    public Optional<ProductNameOnly> getProductName(UUID id) {
+        return productRepository.findProductById(id, ProductNameOnly.class);
     }
 
     @Override
