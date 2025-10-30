@@ -1,23 +1,25 @@
 package com.example.ProductService2025.Models;
 
-import jakarta.persistence.*;
-import org.hibernate.annotations.UuidGenerator;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.UUID;
 
 @Entity
-@Table(name = "category")
+@Data
 public class Category {
-
     @Id
-    @GeneratedValue // do NOT specify IDENTITY
-    @UuidGenerator // Hibernate 6
-    @JdbcTypeCode(SqlTypes.BINARY) // store as BINARY(16)
-    @Column(columnDefinition = "BINARY(16)")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
+    String name;
 
-    private String name;
 }
-
