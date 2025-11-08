@@ -5,10 +5,10 @@ import com.example.ProductService2025.dtos.FakeStoreProductDto;
 import com.example.ProductService2025.exceptions.ProductNotFoundException;
 import com.example.ProductService2025.projections.ProductInfo;
 import com.example.ProductService2025.projections.ProductNameOnly;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -42,9 +42,10 @@ public class FakeStoreProductService implements ProductService{
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return List.of();
+    public Page<Product> getAllProducts(int pageSize, int pageNum) {
+        return null;
     }
+
 
     @Override
     public Product updateProduct(UUID id, String name, String category, String description) throws ProductNotFoundException {

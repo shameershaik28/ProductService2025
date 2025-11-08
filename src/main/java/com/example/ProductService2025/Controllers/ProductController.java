@@ -6,14 +6,12 @@ import com.example.ProductService2025.dtos.CreateProductRequestDto;
 import com.example.ProductService2025.exceptions.ProductNotFoundException;
 import com.example.ProductService2025.projections.ProductInfo;
 import com.example.ProductService2025.projections.ProductNameOnly;
+import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -64,8 +62,11 @@ public class ProductController {
 
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> products = productService.getAllProducts();
+    public ResponseEntity<Page<Product>> getAllProducts(
+            @RequestParam(value = "pageSize", defaultValue = "20") int pageSize,
+            @RequestParam(value = "pageNum", defaultValue = "0") int pageNum
+    ) {
+        Page<Product> products= productService.getAllProducts(pageSize, pageNum);
         return ResponseEntity.ok(products);
     }
 

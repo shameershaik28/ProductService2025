@@ -2,11 +2,12 @@ package com.example.ProductService2025.repositories;
 
 import com.example.ProductService2025.Models.Product;
 import com.example.ProductService2025.projections.ProductInfo;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,6 +22,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     List<Product> findAllByNameLikeIgnoreCase(String word);
     List<Product> findAllByIdLessThan(UUID id);
+    List<Product> findAll();
 
 
     @Query("SELECT p.id AS id, p.name AS name, p.description AS description FROM products p WHERE p.id = :id")
@@ -28,6 +30,8 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     @Query("SELECT p FROM products p WHERE p.id = :id")
     <T> Optional<T> findProductById(@Param("id") UUID id, Class<T> type);
+
+    Page<Product> findAll(Pageable pageable);
 
 
 

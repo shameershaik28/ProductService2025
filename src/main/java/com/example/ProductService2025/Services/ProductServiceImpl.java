@@ -6,9 +6,11 @@ import com.example.ProductService2025.projections.ProductInfo;
 import com.example.ProductService2025.projections.ProductNameOnly;
 import com.example.ProductService2025.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -44,6 +46,13 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
+    public Page<Product> getAllProducts(int pageSize, int pageNum) {
+        return productRepository.findAll(PageRequest.of(pageNum, pageSize, Sort.by("name").descending().and(
+                Sort.by("category")
+        )));
+    }
+
+    @Override
     public Product createProduct(String name, String category, String description) {
 
         Product p = productRepository.findFirstByNameAndCategory(name, category);
@@ -59,10 +68,8 @@ public class ProductServiceImpl implements ProductService{
         return product;
     }
 
-    @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
-    }
+
+
 
     @Override
     public Product updateProduct(UUID id, String name, String category, String description) throws ProductNotFoundException {
