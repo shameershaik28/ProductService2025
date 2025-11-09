@@ -28,6 +28,17 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
+
+
+    // ✅ Fetch product from FakeStore
+    @GetMapping("/fakestore/{id}")
+    public ResponseEntity<Product> getProductFromFakeStore(@PathVariable Long id) throws ProductNotFoundException {
+        Product product = productService.getProductById(id); // directly pass Long
+        return ResponseEntity.ok(product);
+    }
+
+
+
     @GetMapping("/{id}/info")
     public ResponseEntity<?> getProductInfo(@PathVariable UUID id) {
         Optional<ProductInfo> opt = productService.getProductInfo(id);

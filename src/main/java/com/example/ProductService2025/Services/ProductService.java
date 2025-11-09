@@ -12,6 +12,8 @@ import java.util.UUID;
 public interface ProductService {
 
     Product getProductById(UUID id) throws ProductNotFoundException;
+    // NEW: overload for numeric IDs (FakeStore)
+    Product getProductById(Long id) throws ProductNotFoundException;
 
     Optional<ProductInfo> getProductInfo(UUID id);
 

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -19,12 +20,6 @@ public class ProductServiceImpl implements ProductService{
     @Autowired
     ProductRepository productRepository;
 
-//    @Override
-//    public Product getProductById(UUID id) throws ProductNotFoundException {
-//        return productRepository.findById(id)
-//                .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + id));
-//    }
-
     public Product getProductById(UUID id) throws ProductNotFoundException {
         Optional<Product> product = productRepository.findById(id);
         if(product.isPresent()){
@@ -33,6 +28,11 @@ public class ProductServiceImpl implements ProductService{
         else{
             throw new ProductNotFoundException("Product with id:" + id + " is not found");
         }
+    }
+
+    @Override
+    public Product getProductById(Long id) throws ProductNotFoundException {
+        return null;
     }
 
     @Override
